@@ -4,32 +4,33 @@ open QCheck
 external huffman_Compress : bytes -> bytes -> int -> int = "encode_stub"
 external huffman_Uncompress : bytes -> bytes -> int -> int -> unit= "decode_stub"
 
-let s1 = Bytes.of_string Sys.argv.(1)
-let l = String.length s1
+(* if ((Array.length Sys.argv) > 1) then ()
+  let s1 = Bytes.of_string Sys.argv.(1)
+  let l = String.length s1
 
-let s2 = Bytes.create (l+384)
+  let s2 = Bytes.create (l+384)
 
-(*Printing an integer representing the length of the output*)
-let testCompress = huffman_Compress s1 s2 l;;
-print_int testCompress;;
-(*Printing bytes, not expecting anything readable*)
-print_newline ();;
-let sub1 =  Bytes.sub_string s2 0 testCompress;;
-print_string sub1;;
-print_newline ();;
+  (*Printing an integer representing the length of the output*)
+  let testCompress = huffman_Compress s1 s2 l;;
+  print_int testCompress;;
+  (*Printing bytes, not expecting anything readable*)
+  print_newline ();;
+  let sub1 =  Bytes.sub_string s2 0 testCompress;;
+  print_string sub1;;
+  print_newline ();;
 
 
-(*Decompression *)
-let subBytes = Bytes.sub s2 0 testCompress;;
-let lDecomp =  Bytes.length subBytes;;
+  (*Decompression *)
+  let subBytes = Bytes.sub s2 0 testCompress;;
+  let lDecomp =  Bytes.length subBytes;;
 
-let emptyB = Bytes.create l;;
-(*Should return nothing, as Huffman_Uncompress has no return statement,
-therefore there is no assignemtn to a value*)
-huffman_Uncompress subBytes emptyB lDecomp l;;
+  let emptyB = Bytes.create l;;
+  (*Should return nothing, as Huffman_Uncompress has no return statement,
+  therefore there is no assignemtn to a value*)
+  huffman_Uncompress subBytes emptyB lDecomp l;;
 
-let stringOut = Bytes.sub_string s1 0 l;;
-print_string stringOut;;
+  let stringOut = Bytes.sub_string s1 0 l;;
+  print_string stringOut;; *)
 
 
 let string_to_bytes s = Bytes.of_string s;;
@@ -61,7 +62,7 @@ let decomp b l =
         (int)(fun i -> i=i)
 let _= QCheck_runner.run_tests [testTest]*)
 
-let someTest = Test.make ~count:10
-            (string_gen_of_size (int_range 100000 100000).gen char.gen)(fun s -> let length = String.length s in
+let someTest = Test.make ~count:1000
+            (string_gen_of_size (int_range 0 100000).gen char.gen)(fun s -> let length = String.length s in
                                 s = (decomp (comp s) length));;
 let _= QCheck_runner.run_tests ~verbose:true [someTest]
