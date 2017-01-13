@@ -4,9 +4,9 @@ open QCheck
 external huffman_Compress : bytes -> bytes -> int -> int = "encode_stub"
 external huffman_Uncompress : bytes -> bytes -> int -> int -> unit= "decode_stub"
 
+(*Creating first test case*)
 let s1 = Bytes.of_string Sys.argv.(1)
 let l = String.length s1
-
 let s2 = Bytes.create (l+384)
 
 (*Printing an integer representing the length of the output*)
