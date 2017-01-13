@@ -57,14 +57,14 @@ let decomp b l =
 
 (*  *)
 
+(* let nonsenseTest = Test.make ~count:1000
+  (pair (string_gen_of_size (int_range 0 1000).gen char.gen)(string_gen_of_size (int_range 0 1000).gen char.gen))
+  (fun (s, p) -> let length = String.length s in
+    (s <> p -> (decomp (comp s) length <> decomp (comp p) length )));; *)
+
 let compTest = Test.make ~count:1000 (*~print:string_of_inputs *)
   (string_gen_of_size (int_range 0 1000).gen char.gen)
   (fun s -> let length = String.length s in
-    s = decomp (comp s) length );;
-
-(* let revCompTest = Test.make ~count:1000 (*~print:string_of_inputs *)
-  (string_gen_of_size (int_range 0 1000).gen char.gen)
-  (fun s -> let length = String.length s in
-    s = comp( decomp( decomp (comp s) length) length));; *)
+    s = decomp (comp s) length) ;;
 
 let _= QCheck_runner.run_tests ~verbose:true [compTest]

@@ -55,9 +55,16 @@ let decomp b l =
   let () = huffman_Uncompress b output inputLength l in
   Bytes.to_string output;;
 
-let someTest = Test.make ~count:1000 (*~print:string_of_inputs *)
+(*  *)
+
+let compTest = Test.make ~count:1000 (*~print:string_of_inputs *)
+  (pair (string_gen_of_size (int_range 0 1000).gen char.gen)(string_gen_of_size (int_range 0 1000).gen char.gen))
+  (fun (s, p) -> let length = String.length s in
+    decomp (comp s) length <> decomp (comp p) length );;
+
+(* let revCompTest = Test.make ~count:1000 (*~print:string_of_inputs *)
   (string_gen_of_size (int_range 0 1000).gen char.gen)
   (fun s -> let length = String.length s in
-    s = comp( decomp( decomp (comp s) length) length));;
+    s = comp( decomp( decomp (comp s) length) length));; *)
 
-let _= QCheck_runner.run_tests ~verbose:true [someTest]
+let _= QCheck_runner.run_tests ~verbose:true [compTest]
