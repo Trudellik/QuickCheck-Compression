@@ -57,11 +57,6 @@ let decomp b l =
   let () = huffman_Uncompress b output inputLength l in
   Bytes.to_string output;;
 
-(*Test to test if tests can test (testing if QCheck works)*)
-(*let testTest = Test.make
-        (int)(fun i -> i=i)
-let _= QCheck_runner.run_tests [testTest]*)
-
 let someTest = Test.make ~count:1000
             (string_gen_of_size (int_range 0 100000).gen char.gen)(fun s -> let length = String.length s in
                                 s = (decomp (comp s) length));;
