@@ -1,0 +1,6 @@
+"Resource: C:\\cygwin64\\home\\Philip\\huffman/huffman.c": "qZ*¡2-¤1ëv\031.ÓÔ\011÷"
+"Rule: ocaml: ml -> cmo & cmi (%=huffmanTest )": "¶Õ‡\029_ê\016\157ú*¿\n\021:£\020"
+"Rule: ocaml C stubs: c -> o (%=huffman )": "ÃéõŞ¼İ\011ß\015C\028CçÑW\022"
+"Resource: C:\\cygwin64\\home\\Philip\\huffman/huffmanTest.ml": "v\\—»[Ï 'Z…`çÄ¤¶×"
+"Rule: ocaml dependencies ml (%=huffmanTest )": "ôÿ4\136\136O\0042\019½FË­³\011;"
+"Rule: ocaml: cmo* -> byte (%=huffmanTest )": "ªÂ9—\014›İâš£\027ÀHhãï"
