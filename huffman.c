@@ -504,9 +504,9 @@ void Huffman_Uncompress( unsigned char *in, unsigned char *out,
   }
 }
 
+
+
 // Stub FUNCTIONS
-
-
 
 /* A stub function which wraps and unwraps OCaml values */
 CAMLprim value encode_stub(value in, value out, value insize)
@@ -522,6 +522,6 @@ CAMLprim value decode_stub(value in, value out, value insize, value outsize)
   CAMLparam4 (in, out, insize, outsize); // tell the OCaml GC that we have two GC roots here *NOW 4*
   (Huffman_Uncompress((unsigned char *) Bp_val(in), // unwrap OCaml strings, call, wrap result
 			   (unsigned char *) Bp_val(out), Int_val (insize), Int_val (outsize)));
-  CAMLreturnT(value, out);
-//  CAMLreturn (Val_unit);
+  //CAMLreturnT(value, out);
+  CAMLreturn (Val_unit);
 }

@@ -5,15 +5,15 @@ external huffman_Compress : bytes -> bytes -> int -> int = "encode_stub"
 external huffman_Uncompress : bytes -> bytes -> int -> int -> unit= "decode_stub"
 
 (*Creating first test case*)
-let s1 = Bytes.of_string Sys.argv.(1)
+let s1 = Bytes.of_string ""
 let l = String.length s1
 let s2 = Bytes.create (l+384)
 
 (*Printing an integer representing the length of the output*)
 let testCompress = huffman_Compress s1 s2 l;;
 print_int testCompress;;
-(*Printing bytes, not expecting anything readable*)
 print_newline ();;
+(*Printing bytes, not expecting anything readable*)
 let sub1 =  Bytes.sub_string s2 0 testCompress;;
 print_string sub1;;
 print_newline ();;
@@ -48,7 +48,7 @@ let comp s =
   let output = Bytes.create (length + 384) in
   let resLength = (huffman_Compress input output length) in
   Bytes.sub output 0 resLength;;
-(*Will only return a tuple containing the information related to compress*)
+
 (*bytes -> int -> string*)
 let decomp b l =
   let output = Bytes.create l in
@@ -61,7 +61,34 @@ let decomp b l =
         (int)(fun i -> i=i)
 let _= QCheck_runner.run_tests [testTest]*)
 
+(*If compressed multiple times the length will either grow or stay the same*)
+  let someTest = Test.make ~count:1000
+              (string_gen_of_size (int_range 0 100).gen char.gen)(fun s ->
+                    String.length (comp s) <= String.length (comp (comp s)));;
+  let _= QCheck_runner.run_tests ~verbose:true [someTest]
+
+(*~6 min to check a string of length 1.000.000.000*)
 let someTest = Test.make ~count:1000
-            (string_gen_of_size (int_range 0 100000).gen char.gen)(fun s -> let length = String.length s in
+            (string_gen_of_size (int_range 0 100).gen char.gen)(fun s -> let length = String.length s in
                                 s = (decomp (comp s) length));;
-let _= QCheck_runner.run_tests ~verbose:true [someTest]
+let _= QCheck_runner.run_tests [someTest]
+
+
+(*Classify by ASCII values*)
+let classify_test =
+let collector = set_collect
+    (fun s -> "ASCII value: " ^ string_of_int (Char.code (String.get s 0))) (string_gen_of_size (int_range 1 1).gen char.gen) in
+Test.make ~count: 100 ~name: "decomp(comp s)"
+          collector (fun c -> let length = String.length c in
+                                c = decomp (comp c) length);;
+let _ = QCheck_runner.run_tests [classify_test];;
+
+(*Classify by length of the strings*)
+let classify_test =
+let collector = set_collect
+    (fun s -> "Length of strings: " ^ string_of_int (String.length s))
+          (string_gen_of_size (int_range 0 10).gen char.gen) in
+Test.make ~count: 1000 ~name: "String equals the compressed -> decompressed string"
+          collector (fun c -> let length = String.length c in
+                                c = decomp (comp c) length);;
+let _ = QCheck_runner.run_tests [classify_test];;
