@@ -1,1 +1,1 @@
-huffmanTest.ml: Bytes QCheck QCheck_runner String Test
+huffmanTest.ml: Bytes Char QCheck QCheck_runner String Test
