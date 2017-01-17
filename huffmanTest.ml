@@ -62,10 +62,10 @@ let decomp b l =
 let _= QCheck_runner.run_tests [testTest]*)
 
 (*If compressed multiple times the length will either grow or stay the same*)
-  let someTest = Test.make ~count:1000
-              (string_gen_of_size (int_range 0 100).gen char.gen)(fun s ->
-                    String.length (comp s) <= String.length (comp (comp s)));;
-  let _= QCheck_runner.run_tests ~verbose:true [someTest]
+let someTest = Test.make ~count:1000
+            (string_gen_of_size (int_range 0 100).gen char.gen)(fun s ->
+                  String.length (comp s) <= String.length (comp (comp s)));;
+let _= QCheck_runner.run_tests ~verbose:true [someTest]
 
 (*~6 min to check a string of length 1.000.000.000*)
 let someTest = Test.make ~count:1000
