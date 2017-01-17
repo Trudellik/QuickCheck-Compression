@@ -37,6 +37,10 @@ let orig s = Bytes.of_string s;;
 let len s = String.length s;;
 let output s = Bytes.create ((len s)+384);;
 
+let bChar =
+  let intGen = (int_range 97 122) in
+    Gen.map char_of_int intGen.gen;;
+
 let compress input = huffman_Compress (orig input) (output input) (len input);;
 
 (*  comp : string -> bytes*)
@@ -53,6 +57,8 @@ let decomp b l =
   let inputLength = Bytes.length b in
   let () = huffman_Uncompress b output inputLength l in
   Bytes.to_string output;;
+
+(*  *)
 
 (*  *)
 
@@ -86,10 +92,15 @@ let noChange = Test.make ~count:1000 ~name:"The string remains same after comp a
 let _= QCheck_runner.run_tests [noChange]
 
 let uniqueComp = Test.make ~count:1000 ~name:"All comp of same string contain same bytes"
-  (string_gen_of_size (int_range 0 100).gen char.gen)
+  (string_gen_of_size (int_range 0 100).gen bChar)
   (fun s ->
     comp s = comp s);;
 let _= QCheck_runner.run_tests [uniqueComp]
+
+;;
+print_endline (String.escaped (comp "k"));;
+print_endline (String.escaped (comp "k"));;
+
 
 (*Classify by ASCII values*)
 let classify_test1 =
