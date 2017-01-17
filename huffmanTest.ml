@@ -38,6 +38,10 @@ let orig s = Bytes.of_string s;;
 let len s = String.length s;;
 let output s = Bytes.create ((len s)+384);;
 
+let bChar =
+  let intGen = (int_range 97 122) in
+    Gen.map char_of_int intGen.gen;;
+
 let compress input = huffman_Compress (orig input) (output input) (len input);;
 
 
@@ -56,10 +60,25 @@ let decomp b l =
   let () = huffman_Uncompress b output inputLength l in
   Bytes.to_string output;;
 
-(*Test to test if tests can test (testing if QCheck works)*)
-(*let testTest = Test.make
-        (int)(fun i -> i=i)
-let _= QCheck_runner.run_tests [testTest]*)
+
+(*  *)
+
+(*  *)
+
+let nonsenseTest = Test.make ~count:1000 ~name:"Different strings must stay different"
+  (pair (string_gen_of_size (int_range 0 1000).gen char.gen)(string_gen_of_size (int_range 0 1000).gen char.gen))
+  (fun (s, p) ->
+    let lengthS = String.length s in
+    let lengthP = String.length p in
+      ((s <> p) ==> ((decomp (comp s) lengthS <> decomp (comp p) lengthP ))));;
+
+let compTest = Test.make ~count:1000 ~name:"String is completely reconstructed with no change"
+  (string_gen_of_size (int_range 0 1000).gen char.gen)
+  (fun s ->
+    let length = String.length s in
+      s = decomp (comp s) length) ;;
+let _= QCheck_runner.run_tests ~verbose:true [compTest]
+
 
 (*If compressed multiple times the length will either grow or stay the same*)
 let someTest = Test.make ~count:1000
@@ -68,10 +87,29 @@ let someTest = Test.make ~count:1000
 let _= QCheck_runner.run_tests ~verbose:true [someTest]
 
 (*~6 min to check a string of length 1.000.000.000*)
+
 let someTest = Test.make ~count:1000
             (string_gen_of_size (int_range 0 100).gen char.gen)(fun s -> let length = String.length s in
                                 s = (decomp (comp s) length));;
 let _= QCheck_runner.run_tests [someTest]
+
+
+let noChange = Test.make ~count:1000 ~name:"The string remains same after comp and decomp"
+  (string_gen_of_size (int_range 0 100).gen char.gen)
+  (fun s ->
+    let length = String.length s in
+      s = (decomp (comp s) length));;
+let _= QCheck_runner.run_tests [noChange]
+
+let uniqueComp = Test.make ~count:1000 ~name:"All comp of same string contain same bytes"
+  (string_gen_of_size (int_range 0 100).gen bChar)
+  (fun s ->
+    comp s = comp s);;
+let _= QCheck_runner.run_tests [uniqueComp]
+
+;;
+print_endline (String.escaped (comp "k"));;
+print_endline (String.escaped (comp "k"));;
 
 
 (*Classify by ASCII values*)
