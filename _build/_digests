@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 "Resource: C:\\cygwin64\\home\\Philip\\huffman\\QuickCheck-Compression/huffmanTest.ml": "R.LT\011,Âý8Ñ¹è\157:C¼"
 "Resource: C:\\cygwin64\\home\\Philip\\huffman\\QuickCheck-Compression/huffman.c": "/$v¾yÙ-!–\019\129\\?¬9h"
 "Rule: ocaml: ml -> cmo & cmi (%=huffmanTest )": "Œ\006=\b¥9Ú\012\030xù½sK`Ë"
 "Rule: ocaml C stubs: c -> o (%=huffman )": "ßE¡;©ÔL•Eò«›‘»Iƒ"
 "Rule: ocaml dependencies ml (%=huffmanTest )": "\153\\ë†zú\029\026\127Œ.ócT¿A"
 "Rule: ocaml: cmo* -> byte (%=huffmanTest )": "H\144\157f|$¢\025\rox«àÅqá"
+=======
+"Resource: C:\\Users\\Kenneth\\Documents\\GitHub\\QuickCheck-Compression/huffman.c": "ÝPa‘Â¸¢ó*>×–Þ\015£\015"
+"Resource: C:\\Users\\Kenneth\\Documents\\GitHub\\QuickCheck-Compression/huffmanTest.ml": "\029u q<=\001ü¸a\020Î:æçz"
+"Rule: ocaml: ml -> cmo & cmi (%=huffmanTest )": "£i(\030«=üãHjuÐxNËÒ"
+"Rule: ocaml C stubs: c -> o (%=huffman )": ">±áòÑ!rxá\t‚C®Vÿh"
+"Rule: ocaml dependencies ml (%=huffmanTest )": "|¬3.Ë\"Ñz½rVÊc\129ú\005"
+"Rule: ocaml: cmo* -> byte (%=huffmanTest )": "2I2¨Ôîn÷[Ý\007Ô&cä\005"
+>>>>>>> origin/master
