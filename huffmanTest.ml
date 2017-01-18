@@ -67,7 +67,10 @@ let length_of_strings =
   set_collect
     (fun s -> "String length: " ^ string_of_int (String.length s));;
 
-
+let rec elements =
+  Gen.oneof
+    ([ Gen.return [];
+       Gen.map2 (fun c acs -> c::acs) Gen.int elements])
 (*  *)
 
 let nonsenseTest = Test.make ~count:1000 ~name:"Different strings must stay different"
@@ -140,7 +143,6 @@ let _ = QCheck_runner.run_tests [classify_test2];;
 
 print_endline ("--- TESTING OF HUFFMAN OCAML ---")
 
-(* let baseTest =
+let baseTest =
   Test.make ~count:1000 ~name:"Basis check of the property with int as input"
-  (int) (fun f ->
-    decode (encode [f])) *)
+  (list.gen int) (fun f ->
