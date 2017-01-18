@@ -137,3 +137,10 @@ let collector = set_collect
         collector (fun c -> let length = String.length c in
           c = decomp (comp c) length);;
 let _ = QCheck_runner.run_tests [classify_test2];;
+
+print_endline ("--- TESTING OF HUFFMAN OCAML ---")
+
+(* let baseTest =
+  Test.make ~count:1000 ~name:"Basis check of the property with int as input"
+  (int) (fun f ->
+    decode (encode [f])) *)
