@@ -1,5 +1,4 @@
 open QCheck;;
-#use "huffman_code.ml"
 
 external huffman_Compress : bytes -> bytes -> int -> int = "encode_stub"
 external huffman_Uncompress : bytes -> bytes -> int -> int -> unit= "decode_stub"
@@ -70,10 +69,10 @@ let length_of_strings =
   set_collect
     (fun s -> "String length: " ^ string_of_int (String.length s));;
 
-let rec elements =
+(*let rec elements =
   Gen.oneof
     ([ Gen.return [];
-       Gen.map2 (fun c acs -> c::acs) Gen.int elements])
+       Gen.map2 (fun c acs -> c::acs) Gen.int elements])*)
 (*  *)
 
 let rec testString i j = if i<=j then (String.make 1 (char_of_int i)) ^ (testString (i+1) j) else "";;
@@ -92,7 +91,8 @@ let nonsenseTest = Test.make ~count:1000 ~name:"Different strings must stay diff
       ((s <> p) ==> ((decomp (comp s) lengthS <> decomp (comp p) lengthP ))));;
 let _= QCheck_runner.run_tests ~verbose:true [nonsenseTest]
 
-let compTest = Test.make ~count:1000 ~name:"String is completely reconstructed with no change"
+let compTest = Test.make ~count:1000
+                         ~name:"String is completely reconstructed with no change"
   (string_gen_of_size (int_range 0 1000).gen (charInv 0 255))
   (fun s ->
     let length = String.length s in
@@ -114,11 +114,11 @@ let someTest = Test.make ~count:1000
 let _= QCheck_runner.run_tests [someTest]
 
 
-let noChange = Test.make ~count:1000 ~name:"The string remains same after comp and decomp"
-  (set_shrink Shrink.string (string_gen_of_size (small_int).gen char.gen))
-  (fun s ->
-    let length = String.length s in
-      s = (decomp (comp s) length));;
+let noChange = Test.make ~count:1000
+                         ~name:"The string remains same after comp and decomp"
+  (string_gen_of_size (small_int).gen (charInv 0 255))
+  (fun s -> let length = String.length s in
+            s = (decomp (comp s) length));;
 let _= QCheck_runner.run_tests ~verbose:true [noChange]
 
 let oddSymbols = Test.make ~count:1000 ~name:"The generate odds symbols"
@@ -135,10 +135,10 @@ let compDecomp = Test.make
                           (decomp (comp s) length) = (decomp (comp s) length));;
 let _= QCheck_runner.run_tests [compDecomp]
 
-let uniqueComp = Test.make ~count:1000 ~name:"All comp of same string contain same bytes"
+let uniqueComp = Test.make ~count:1000
+                           ~name:"All comp of same string contain same bytes"
   (string_gen_of_size (int_range 0 100).gen (charInv 0 255))
-  (fun s ->
-    comp s = comp s);;
+  (fun s -> comp s = comp s);;
 
 let _= QCheck_runner.run_tests [uniqueComp];;
 
@@ -160,9 +160,6 @@ print_endline ((string_of_int(Char.code (String.get s2 0))) ^ " " ^
                 (string_of_int(Char.code (String.get s2 2))));;
 
 
-let _= QCheck_runner.run_tests ~verbose:true [uniqueComp]
-
-
 (*Classify by ASCII values*)
 let classify_test =
 let collector = set_collect
@@ -179,9 +176,10 @@ let _ = QCheck_runner.run_tests [classify_test];;
 (*Classify by length of the strings*)
 let classify_test =
 let collector = set_collect
-  (fun s ->
-    "Length of strings: " ^ string_of_int (String.length s))(string_gen_of_size (int_range 0 10).gen (charInv 0 255)) in
-      Test.make ~count: 1000 ~name: "String equals the compressed -> decompressed string"
-        collector (fun c -> let length = String.length c in
-          c = decomp (comp c) length);;
-let _ = QCheck_runner.run_tests [classify_test];;
+  (fun s -> "Length of strings: " ^ string_of_int (String.length s))
+            (string_gen_of_size (int_range 0 10).gen (charInv 0 255)) in
+Test.make ~count: 1000
+          ~name: "String equals the compressed -> decompressed string"
+          collector (fun c -> let length = String.length c in
+            c = decomp (comp c) length);;
+let _ = QCheck_runner.run_tests ~verbose:true [classify_test];;
