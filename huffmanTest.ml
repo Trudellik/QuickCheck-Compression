@@ -23,10 +23,6 @@ let charInv i j =
   let intGen = (int_range i j) in
     Gen.map char_of_int intGen.gen;;
 
-let length_of_strings =
-  set_collect
-    (fun s ->
-      "String length: " ^ string_of_int (String.length s));;
 (*  *)
 
 (* let rec testString i j = if i<=j then (String.make 1 (char_of_int i)) ^ (testString (i+1) j) else "";;
@@ -42,14 +38,14 @@ let nonsenseTest = Test.make ~count:1000 ~name:"Different strings must stay diff
     let lengthS = String.length s in
     let lengthP = String.length p in
       ((s <> p) ==> ((decomp (comp s) lengthS <> decomp (comp p) lengthP ))));;
-let _= QCheck_runner.run_tests ~verbose:true [nonsenseTest]
+let _= QCheck_runner.run_tests  [nonsenseTest]
 
 let compTest = Test.make ~count:1000 ~name:"String is completely reconstructed with no change"
   (string_gen_of_size (int_range 0 1000).gen (charInv 0 255))
   (fun s ->
     let length = String.length s in
       s = decomp (comp s) length) ;;
-let _= QCheck_runner.run_tests ~verbose:true [compTest]
+let _= QCheck_runner.run_tests  [compTest]
 
 
 (*If compressed multiple times the length will either grow or stay the same*)
@@ -57,7 +53,7 @@ let someTest = Test.make ~count:1000
   (string_gen_of_size (int_range 0 100).gen (charInv 0 255))
   (fun s ->
     String.length (comp s) <= String.length (comp (comp s)));;
-let _= QCheck_runner.run_tests ~verbose:true [someTest]
+let _= QCheck_runner.run_tests  [someTest]
 
 (*~6 min to check a string of length 1.000.000.000*)
 
@@ -74,14 +70,14 @@ let noChange = Test.make ~count:1000 ~name:"The string remains same after comp a
   (fun s ->
     let length = String.length s in
       s = (decomp (comp s) length));;
-let _= QCheck_runner.run_tests ~verbose:true [noChange]
+let _= QCheck_runner.run_tests  [noChange]
 
 let oddSymbols = Test.make ~count:1000 ~name:"The generate odds symbols"
   (string_gen_of_size (small_int).gen (charInv 0 31))
   (fun s ->
     let length = String.length s in
       s = (decomp (comp s) length));;
-let _= QCheck_runner.run_tests ~verbose:true [oddSymbols]
+let _= QCheck_runner.run_tests  [oddSymbols]
 
 let compDecomp = Test.make ~count:1000 ~name:"Compress and decompress the same string on both sides of ="
   (string_gen_of_size (int_range 0 100).gen (charInv 0 255))
@@ -100,7 +96,7 @@ let uniqueCompLength = Test.make ~count:1000 ~name:"All comp of same string has 
   (string_gen_of_size (int_range 0 1000).gen (charInv 0 255))
   (fun s ->
     String.length (comp s) = String.length (comp s));;
-let _= QCheck_runner.run_tests ~verbose:true [uniqueCompLength];;
+let _= QCheck_runner.run_tests  [uniqueCompLength];;
 
 
 let s1 = comp "ik";;
@@ -139,4 +135,4 @@ let collector = set_collect
 Test.make ~count: 1000 ~name: "String equals the compressed -> decompressed string"
   collector (fun c -> let length = String.length c in
     c = decomp (comp c) length);;
-let _ = QCheck_runner.run_tests ~verbose:true [classify_test];;
+let _ = QCheck_runner.run_tests [classify_test];;

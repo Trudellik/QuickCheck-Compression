@@ -23,10 +23,6 @@ let charInv i j =
   let intGen = (int_range i j) in
     Gen.map char_of_int intGen.gen;;
 
-let length_of_strings =
-  set_collect
-    (fun s ->
-      "String length: " ^ string_of_int (String.length s));;
 (*  *)
 
 (* let rec testString i j = if i<=j then (String.make 1 (char_of_int i)) ^ (testString (i+1) j) else "";;
